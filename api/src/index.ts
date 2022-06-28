@@ -1,8 +1,9 @@
-import express, { Express, Request, Response, Router } from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
-
 dotenv.config();
+import express, { Express, Request, Response, Router } from 'express';
+import cors from 'cors';
+import { startSubscriber } from './subscriber';
+
 
 const app: Express = express();
 app.use(express.json({ limit: '10mb' }));
@@ -16,6 +17,8 @@ app.get('/', (req: Request, res: Response) => {
 const apiRouter = Router()
 
 app.use('/api', apiRouter)
+
+startSubscriber()
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);

@@ -24,6 +24,8 @@
   },
   "dependencies": {
     "@prisma/client": "3.15.1",
+    "@zilliqa-js/subscriptions": "^3.3.4",
+    "@zilliqa-js/zilliqa": "^3.3.4",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
