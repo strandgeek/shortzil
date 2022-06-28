@@ -10,7 +10,7 @@ declare global {
 }
 
 
-export const mintSlugUrl = async (slug: string, url: string) => {
+export const mintSlugUrl = async (slug: string, url: string): Promise<boolean> => {
   const zilliqa = window.zilPay;
   console.log(zilliqa.wallet.defaultAccount)
   const to = fromBech32Address(zilliqa.wallet.defaultAccount.bech32);
@@ -55,10 +55,13 @@ export const mintSlugUrl = async (slug: string, url: string) => {
     const txn = await waitForTx(tx.ID)
     if (!txn.success) {
       toast.error('Transaction failed')
+      return false
     } else {
       toast.success('Success! Short URL created successfully')
+      return true
     }
   } catch (err) {
     console.log(err);
   }
+  return false
 };

@@ -20,17 +20,19 @@ export const GenerateForm = () => {
     setLoading(true);
     try {
       if (window.zilPay.wallet.isEnable) {
-        await mintSlugUrl(slug, url);
-        setSuccess(true);
-        // @ts-ignore
-        if (typeof party !== "undefined") {
+        const success = await mintSlugUrl(slug, url);
+        if (success) {
+          setSuccess(true);
           // @ts-ignore
-          const { confetti, variation } = party;
-          confetti(document.body, {
-            count: variation.range(140, 200),
-            size: variation.range(0.8, 1.2),
-            spread: variation.range(5, 10),
-          });
+          if (typeof party !== "undefined") {
+            // @ts-ignore
+            const { confetti, variation } = party;
+            confetti(document.body, {
+              count: variation.range(140, 200),
+              size: variation.range(0.8, 1.2),
+              spread: variation.range(5, 10),
+            });
+          }
         }
       } else {
         const isConnect = await window.zilPay.wallet.connect();
