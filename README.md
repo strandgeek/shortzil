@@ -2,7 +2,7 @@
 
 ### About
 
-Link Shortner + Blockchain + Zilliqa + NFTS = shortzil
+Link Shortner + Blockchain + Zilliqa + NFT = shortzil
 
 The shortzil was developed for the Zilliqa Open Track Challenge. You can see more details here: https://shortzil.xyz/hackathon
 
