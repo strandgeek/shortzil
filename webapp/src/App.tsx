@@ -7,12 +7,8 @@ import { MyLinks } from "./pages/MyLinks";
 import { About } from "./pages/About";
 
 function App() {
-  const connectWallet = async () => {
-    await window.zilPay.wallet.connect();
-  };
-
   return (
-    <div>
+    <div className="overflow-y-auto py-8">
       <ToastContainer />
       <HashRouter>
         <Routes>

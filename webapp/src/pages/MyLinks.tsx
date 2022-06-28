@@ -7,8 +7,8 @@ import { Topbar } from "../components/Topbar";
 import { TransferModal } from "../components/TransferModal";
 
 export const TableRow: FC<any> = ({ link, onTransfer }) => {
-  const [editOpen, setEditOpen] = useState(false)
-  const [transferOpen, setTransferOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false);
+  const [transferOpen, setTransferOpen] = useState(false);
   return (
     <tr>
       <EditUrlModal
@@ -29,7 +29,10 @@ export const TableRow: FC<any> = ({ link, onTransfer }) => {
       </td>
       <td>
         <div className="tooltip" data-tip="Edit URL">
-          <button className="btn btn-sm btn-circle btn-outline" onClick={() => setEditOpen(true)}>
+          <button
+            className="btn btn-sm btn-circle btn-outline"
+            onClick={() => setEditOpen(true)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -47,7 +50,10 @@ export const TableRow: FC<any> = ({ link, onTransfer }) => {
           </button>
         </div>
         <div className="tooltip ml-2" data-tip="Transfer Ownership">
-          <button className="btn btn-sm btn-circle btn-outline" onClick={() => setTransferOpen(true)}>
+          <button
+            className="btn btn-sm btn-circle btn-outline"
+            onClick={() => setTransferOpen(true)}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-4 w-4"
@@ -70,11 +76,16 @@ export const TableRow: FC<any> = ({ link, onTransfer }) => {
 };
 
 export const MyLinks = () => {
+  const [loading, setLoading] = useState(true);
+  const [requestConnect, setRequestConnect] = useState(false);
   const [links, setLinks] = useState<any>([]);
   const removeTokenIdFromLinks = (tokenId: number) => {
-    setLinks((links: any) => links.filter((link: any) => link.tokenId !== tokenId))
-  }
+    setLinks((links: any) =>
+      links.filter((link: any) => link.tokenId !== tokenId)
+    );
+  };
   const fetchLinks = async () => {
+    setLoading(true);
     try {
       if (
         window &&
@@ -94,10 +105,23 @@ export const MyLinks = () => {
       toast.error("Could not fetch list of links");
       console.log(error);
     }
+    setLoading(false);
+  };
+  const connect = async () => {
+    try {
+      await window.zilPay.wallet.connect();
+      window.location.reload();
+    } catch (error) {
+      toast.error("Could not connect your wallet");
+    }
   };
   useEffect(() => {
     window.setTimeout(() => {
-      fetchLinks();
+      if (!window?.zilPay?.wallet?.defaultAccount) {
+        setRequestConnect(true);
+      } else {
+        fetchLinks();
+      }
     }, 200);
   }, []);
   return (
@@ -106,24 +130,34 @@ export const MyLinks = () => {
       <div>
         <div className="mt-24 w-screen flex items-center justify-center">
           <div>
-            <table className="table w-full">
-              <thead>
-                <tr>
-                  <th>NFT Token ID</th>
-                  <th>Short Link</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {links.map((link: any) => (
-                  <TableRow
-                    key={link.tokenId}
-                    link={link}
-                    onTransfer={() => removeTokenIdFromLinks(link.tokenId)}
-                  />
-                ))}
-              </tbody>
-            </table>
+            {requestConnect ? (
+              <button className="btn btn-primary" onClick={() => connect()}>
+                Connect Wallet
+              </button>
+            ) : (
+              <>
+                {!loading && (
+                  <table className="table w-full">
+                    <thead>
+                      <tr>
+                        <th>NFT Token ID</th>
+                        <th>Short Link</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {links.map((link: any) => (
+                        <TableRow
+                          key={link.tokenId}
+                          link={link}
+                          onTransfer={() => removeTokenIdFromLinks(link.tokenId)}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
