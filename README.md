@@ -14,6 +14,7 @@ The main idea is that anyone can reserve a unique name (slug) to shorten a url. 
 
 - 📄 Smart Contract: [https://shortzil.xyz/contract](https://shortzil.xyz/contract)
 
+- 📹 Video: [https://shortzil.xyz/video](https://shortzil.xyz/video)
 
 
 ### Screenshots
