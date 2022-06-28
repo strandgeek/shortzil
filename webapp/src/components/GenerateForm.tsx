@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { client } from "../client";
 import { validateSlug, validateUrl } from "../utils/validate";
 import { mintSlugUrl } from "../web3/zilliqa";
 
@@ -16,10 +17,27 @@ export const GenerateForm = () => {
 
   const shortUrl = `${process.env.REACT_APP_BASE_URL}/${slug}`
 
+  const checkAvailability = async (slug: string) => {
+    try {
+      const { data } = await client.get(`/slug-availability/${slug}`)
+      setValidationErrors((validationErrors) => {
+        return {
+          ...validationErrors,
+          slug: data.available
+            ? undefined
+            : 'This slug has already been taken',
+        };
+      });
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const generateShortUrl = async () => {
     setLoading(true);
+    console.log(window.zilPay.wallet)
     try {
-      if (window.zilPay.wallet.isEnable) {
+      if (window.zilPay.wallet.isEnable && window.zilPay.wallet.defaultAccount) {
         const success = await mintSlugUrl(slug, url);
         if (success) {
           setSuccess(true);
@@ -37,9 +55,8 @@ export const GenerateForm = () => {
       } else {
         const isConnect = await window.zilPay.wallet.connect();
         if (isConnect) {
-          // this.updateWelcomeMsg();
         } else {
-          alert("Not able to call setHello as transaction is rejected");
+          alert("Not able to call function as transaction is rejected");
         }
       }
     } catch (error) {
@@ -76,6 +93,7 @@ export const GenerateForm = () => {
           : 'Invalid Slug. Characters allowed: a-z, 0-9 and "-"',
       };
     });
+    checkAvailability(slug)
   };
 
   const copyShortUrlToClipboard = async () => {

@@ -34,7 +34,6 @@ subscriber.emitter.on(MessageType.EVENT_LOG, async (event) => {
       }
       if(eventLogs._eventname == "TransferSuccess") {
         const params = eventLogs.params
-        console.log(params)
         const to = params[1].value
         const tokenId = parseInt(params[2].value)
         await prisma.slugUrl.update({
@@ -43,6 +42,19 @@ subscriber.emitter.on(MessageType.EVENT_LOG, async (event) => {
           },
           data: {
             owner: to,
+          }
+        })
+      }
+      if(eventLogs._eventname == "UpdateUrlSuccess") {
+        const params = eventLogs.params
+        const slug = params[0].value
+        const url = params[1].value
+        await prisma.slugUrl.update({
+          where: {
+            slug,
+          },
+          data: {
+            url,
           }
         })
       }
