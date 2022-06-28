@@ -40,6 +40,7 @@ app.get('/metadata/:tokenId', async (req: Request, res: Response) => {
   })
   return res.json({
     name: `#${slugUrl?.tokenId} [${slugUrl?.slug}]`,
+    slug: slugUrl?.slug,
     url: slugUrl?.url,
     image: 'https://shortzil.xyz/logo.png',
   })
