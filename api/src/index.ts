@@ -11,10 +11,6 @@ app.use(express.json({ limit: '10mb' }));
 const port = process.env.PORT || 4000;
 app.use(cors())
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('OK');
-});
-
 app.get('/:slug', async (req: Request, res: Response) => {
   const slug = req.params.slug;
   const slugUrl = await prisma.slugUrl.findUnique({
@@ -38,6 +34,9 @@ app.get('/metadata/:tokenId', async (req: Request, res: Response) => {
       tokenId,
     }
   })
+  if (!slugUrl) {
+    return res.sendStatus(404)
+  }
   return res.json({
     name: `#${slugUrl?.tokenId} [${slugUrl?.slug}]`,
     slug: slugUrl?.slug,
