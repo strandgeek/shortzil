@@ -66,14 +66,14 @@ export const GenerateForm = () => {
     !validationErrors.slug;
 
   return (
-    <div className="max-w-md">
+    <div className="w-[480px]">
       <div className="form-control w-full">
         <label className="input-group">
           <span className="bg-gray-100">shortzil.xyz/</span>
           <input
             type="text"
             placeholder="my-slug"
-            className="input input-bordered input-lg"
+            className="input input-bordered input-lg w-full"
             onChange={onSlugChange}
             onBlur={onSlugBlur}
             value={slug}

@@ -11,9 +11,10 @@ datasource db {
 }
 
 model SlugUrl {
-  id      String @id @default(uuid())
-  slug    String @unique
-  url     String
-  owner   String
-  tokenId Int
+  id       String @id @default(uuid())
+  slug     String @unique
+  url      String
+  owner    String
+  tokenId  Int @unique
+  tokenUri String
 }

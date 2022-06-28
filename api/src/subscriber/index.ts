@@ -1,5 +1,6 @@
 import { Zilliqa } from '@zilliqa-js/zilliqa';
 import { StatusType, MessageType } from '@zilliqa-js/subscriptions';
+import { prisma } from '../db';
 
 const zilliqa = new Zilliqa('https://dev-api.zilliqa.com');
 const subscriber = zilliqa.subscriptionBuilder.buildEventLogSubscriptions(
@@ -9,18 +10,45 @@ const subscriber = zilliqa.subscriptionBuilder.buildEventLogSubscriptions(
   },
 );
 
-subscriber.emitter.on(StatusType.SUBSCRIBE_EVENT_LOG, (event) => {
-  // if subscribe success, it will echo the subscription info
-  console.log('get SubscribeEventLog echo : ', event);
-});
-
-subscriber.emitter.on(MessageType.EVENT_LOG, (event) => {
-  console.log('get new event log: ', JSON.stringify(event));
-  // updating the welcome msg when a new event log is received related to getHello() transition
-  if(event.hasOwnProperty("value")){
-    if(event.value[0].event_logs[0]._eventname =="Mint"){
-      console.log(event.value[0].event_logs[0].params[0])
+subscriber.emitter.on(MessageType.EVENT_LOG, async (event) => {
+  try {
+    if(event.hasOwnProperty("value")){
+      const value = event.value[0]
+      const eventLogs = value.event_logs[0]
+      if(eventLogs._eventname == "MintSuccess") {
+        const params = eventLogs.params
+        const owner = params[1].value
+        const tokenId = parseInt(params[2].value)
+        const tokenUri = params[3].value
+        const slug = params[4].value
+        const url = params[5].value
+        await prisma.slugUrl.create({
+          data: {
+            owner,
+            slug,
+            tokenId,
+            tokenUri,
+            url,
+          }
+        })
+      }
+      if(eventLogs._eventname == "TransferSuccess") {
+        const params = eventLogs.params
+        console.log(params)
+        const to = params[1].value
+        const tokenId = parseInt(params[2].value)
+        await prisma.slugUrl.update({
+          where: {
+            tokenId,
+          },
+          data: {
+            owner: to,
+          }
+        })
+      }
     }
+  } catch (error) {
+    console.log(error)
   }
 });  
 
