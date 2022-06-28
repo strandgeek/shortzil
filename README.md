@@ -12,7 +12,7 @@ The main idea is that anyone can reserve a unique name (slug) to shorten a url. 
 
 - ⚡️ Live Demo: [https://shortzil.xyz](https://shortzil.xyz)
 
-- 📄 Smart Contract: [https://shortzil.xyz/contract](https://facebook.github.io/create-react-app/docs/running-tests)
+- 📄 Smart Contract: [https://shortzil.xyz/contract](https://shortzil.xyz/contract)
 
 
 
